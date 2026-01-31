@@ -949,7 +949,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <body>
     <div class="container">
         <header class="header full" id="header">
-            <div class="logo">[START]</div>
             <div class="header-content">
                 <h1>Telegram Chat Manager</h1>
                 <p>Clean up your Telegram — safely and privately</p>
@@ -2543,23 +2542,21 @@ async def export_data_endpoint(export_type: str, format: str = "json"):
     filename_prefix = export_type
 
     try:
+        # all_chats_cache contains dictionaries with 'type' field, not Telethon entities
         if export_type == "groups":
             data = [
-                chat_to_dict(c) 
-                for c in all_chats_cache 
-                if isinstance(c, (Chat, Channel)) and (getattr(c, "megagroup", False) or isinstance(c, Chat))
+                c for c in all_chats_cache 
+                if c.get("type") in ("group", "supergroup")
             ]
         elif export_type == "channels":
             data = [
-                chat_to_dict(c) 
-                for c in all_chats_cache 
-                if isinstance(c, Channel) and not getattr(c, "megagroup", False)
+                c for c in all_chats_cache 
+                if c.get("type") == "channel"
             ]
         elif export_type == "users":
             data = [
-                chat_to_dict(c) 
-                for c in all_chats_cache 
-                if isinstance(c, User)
+                c for c in all_chats_cache 
+                if c.get("type") == "user"
             ]
         else:
             raise HTTPException(status_code=400, detail="Invalid export type")
