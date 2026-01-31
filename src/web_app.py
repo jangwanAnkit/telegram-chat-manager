@@ -334,7 +334,7 @@ if __name__ == "__main__":
     print("TELEGRAM CHAT MANAGER - Web UI")
     print("=" * 80)
     print("\nOpen your browser and go to: http://localhost:5000")
-    print("\n⚠️  This runs ONLY on your local machine!")
+    print("\n[WARN]  This runs ONLY on your local machine!")
     print("Your credentials never leave your computer.\n")
 
     # Create templates directory and HTML file

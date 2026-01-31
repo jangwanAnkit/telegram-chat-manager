@@ -43,7 +43,7 @@ def load_config():
     with open(CONFIG_FILE, "w") as f:
         json.dump(config, f, indent=2)
 
-    print(f"\n✓ Config saved to {CONFIG_FILE}")
+    print(f"\n[OK] Config saved to {CONFIG_FILE}")
     return config
 
 
@@ -67,7 +67,7 @@ async def fetch_all_chats():
         if len(all_chats) % 50 == 0:
             print(f"  Fetched {len(all_chats)} chats so far...")
 
-    print(f"✓ Fetched total {len(all_chats)} chats")
+    print(f"[OK] Fetched total {len(all_chats)} chats")
     return all_chats
 
 
@@ -199,13 +199,13 @@ def print_user_analysis(analysis):
     print("\n" + "=" * 80)
     print("USER CHAT ANALYSIS")
     print("=" * 80)
-    print(f"✗ Deleted Users (accounts deleted): {len(analysis['deleted'])}")
-    print(f"✗ No Messages (empty chats): {len(analysis['no_messages'])}")
-    print(f"⚠️  Only Incoming (never replied): {len(analysis['only_incoming'])}")
-    print(f"🤖 Bots: {len(analysis['bots'])}")
-    print(f"🚫 Scam Users (flagged by Telegram): {len(analysis['scam'])}")
-    print(f"🚫 Fake Users (flagged by Telegram): {len(analysis['fake'])}")
-    print(f"✓ Active Chats (you interacted): {len(analysis['active'])}")
+    print(f"[FAIL] Deleted Users (accounts deleted): {len(analysis['deleted'])}")
+    print(f"[FAIL] No Messages (empty chats): {len(analysis['no_messages'])}")
+    print(f"[WARN]  Only Incoming (never replied): {len(analysis['only_incoming'])}")
+    print(f"[BOT] Bots: {len(analysis['bots'])}")
+    print(f"[BLOCK] Scam Users (flagged by Telegram): {len(analysis['scam'])}")
+    print(f"[BLOCK] Fake Users (flagged by Telegram): {len(analysis['fake'])}")
+    print(f"[OK] Active Chats (you interacted): {len(analysis['active'])}")
     print(
         f"\nTotal Spam/Unused: {len(analysis['deleted']) + len(analysis['no_messages']) + len(analysis['scam']) + len(analysis['fake'])}"
     )
@@ -248,9 +248,9 @@ async def export_users_to_json(users):
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(users_list, f, indent=2, ensure_ascii=False)
 
-    print(f"\n✓ Exported {len(users)} users to {filename}")
+    print(f"\n[OK] Exported {len(users)} users to {filename}")
     print(
-        f"\n📝 To delete users, edit this file and keep only the users you want to DELETE,"
+        f"\n[INFO] To delete users, edit this file and keep only the users you want to DELETE,"
     )
     print(f"   then use option 11 to delete them.")
 
@@ -363,9 +363,9 @@ async def export_simple_list(items, item_type="items"):
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(simple_list, f, indent=2, ensure_ascii=False)
 
-    print(f"\n✓ Exported {len(items)} {item_type} to {filename}")
+    print(f"\n[OK] Exported {len(items)} {item_type} to {filename}")
     print(
-        f"\n📝 To delete items, edit this file and keep only the items you want to DELETE,"
+        f"\n[INFO] To delete items, edit this file and keep only the items you want to DELETE,"
     )
     print(f"   then use the delete option.")
 
@@ -384,7 +384,7 @@ async def delete_from_json_file(all_items):
     ]
 
     if not json_files:
-        print("✗ No JSON files found in current directory")
+        print("[FAIL] No JSON files found in current directory")
         return
 
     print("\nAvailable JSON files:")
@@ -408,21 +408,21 @@ async def delete_from_json_file(all_items):
         filename = choice
 
     if not os.path.exists(filename):
-        print(f"✗ File '{filename}' not found")
+        print(f"[FAIL] File '{filename}' not found")
         return
 
     try:
         with open(filename, "r", encoding="utf-8") as f:
             items_to_delete = json.load(f)
     except Exception as e:
-        print(f"✗ Error reading JSON file: {e}")
+        print(f"[FAIL] Error reading JSON file: {e}")
         return
 
     if not items_to_delete or not isinstance(items_to_delete, list):
-        print("✗ Invalid JSON format. Expected a list.")
+        print("[FAIL] Invalid JSON format. Expected a list.")
         return
 
-    print(f"\n✓ Loaded {len(items_to_delete)} items from {filename}")
+    print(f"\n[OK] Loaded {len(items_to_delete)} items from {filename}")
 
     item_map = {item.id: item for item in all_items}
 
@@ -435,23 +435,23 @@ async def delete_from_json_file(all_items):
         if item_id in item_map:
             found_items.append(item_map[item_id])
             item_type = item.get("type", "unknown")
-            print(f"✓ [{item_type}] {item.get('title', 'Unknown')} (ID: {item_id})")
+            print(f"[OK] [{item_type}] {item.get('title', 'Unknown')} (ID: {item_id})")
         else:
             not_found.append(item)
-            print(f"✗ {item.get('title', 'Unknown')} (ID: {item_id}) - Not found")
+            print(f"[FAIL] {item.get('title', 'Unknown')} (ID: {item_id}) - Not found")
 
     if not_found:
-        print(f"\n⚠️  Warning: {len(not_found)} items not found")
+        print(f"\n[WARN]  Warning: {len(not_found)} items not found")
 
     if not found_items:
-        print("\n✗ No matching items found to delete")
+        print("\n[FAIL] No matching items found to delete")
         return
 
-    print(f"\n⚠️  YOU ARE ABOUT TO DELETE {len(found_items)} CHATS!")
+    print(f"\n[WARN]  YOU ARE ABOUT TO DELETE {len(found_items)} CHATS!")
     confirm = input("Type 'DELETE' to confirm: ").strip()
 
     if confirm != "DELETE":
-        print("❌ Cancelled.")
+        print("[ERROR] Cancelled.")
         return
 
     left_count = 0
@@ -464,7 +464,7 @@ async def delete_from_json_file(all_items):
             item_title = getattr(
                 item, "title", getattr(item, "first_name", f"User_{item.id}")
             )
-            print(f"[{i}/{len(found_items)}] ✓ Deleted '{item_title}'")
+            print(f"[{i}/{len(found_items)}] [OK] Deleted '{item_title}'")
             left_count += 1
         except Exception as e:
             item_title = getattr(
@@ -472,15 +472,15 @@ async def delete_from_json_file(all_items):
             )
             error_msg = f"'{item_title}': {str(e)}"
             errors.append(error_msg)
-            print(f"[{i}/{len(found_items)}] ✗ Error: {e}")
+            print(f"[{i}/{len(found_items)}] [FAIL] Error: {e}")
 
     print(f"\n{'=' * 80}")
     print(f"DELETION SUMMARY")
     print(f"{'=' * 80}")
-    print(f"✓ Successfully deleted: {left_count}/{len(found_items)} chats")
+    print(f"[OK] Successfully deleted: {left_count}/{len(found_items)} chats")
 
     if errors:
-        print(f"\n✗ Errors ({len(errors)}):")
+        print(f"\n[FAIL] Errors ({len(errors)}):")
         for error in errors[:10]:
             print(f"  - {error}")
         if len(errors) > 10:
@@ -499,7 +499,7 @@ async def delete_from_json_file(all_items):
     with open(log_filename, "w", encoding="utf-8") as f:
         json.dump(log_data, f, indent=2, ensure_ascii=False)
 
-    print(f"\n✓ Deletion log saved to {log_filename}")
+    print(f"\n[OK] Deletion log saved to {log_filename}")
 
 
 async def list_items(items):
@@ -525,13 +525,13 @@ async def list_items(items):
                 else "    Phone: None"
             )
             if details["is_deleted"]:
-                print(f"    ⚠️  DELETED USER")
+                print(f"    [WARN]  DELETED USER")
             if details["is_scam"]:
-                print(f"    🚫 SCAM USER")
+                print(f"    [BLOCK] SCAM USER")
             if details["is_fake"]:
-                print(f"    🚫 FAKE USER")
+                print(f"    [BLOCK] FAKE USER")
             if details["is_bot"]:
-                print(f"    🤖 BOT")
+                print(f"    [BOT] BOT")
         else:
             print(f"    Members: {details.get('participants_count', 'Unknown')}")
             print(
@@ -574,15 +574,15 @@ async def interactive_delete_users(users):
 
         # Show warnings/flags
         if is_deleted:
-            print("⚠️  DELETED USER (account no longer exists)")
+            print("[WARN]  DELETED USER (account no longer exists)")
         if is_bot:
-            print("🤖 BOT")
+            print("[BOT] BOT")
         if is_scam:
-            print("🚫 SCAM USER (flagged by Telegram)")
+            print("[BLOCK] SCAM USER (flagged by Telegram)")
         if is_fake:
-            print("🚫 FAKE USER (flagged by Telegram)")
+            print("[BLOCK] FAKE USER (flagged by Telegram)")
         if is_verified:
-            print("✓ VERIFIED USER")
+            print("[OK] VERIFIED USER")
 
         # Try to get last few messages for context
         try:
@@ -590,7 +590,7 @@ async def interactive_delete_users(users):
             if messages:
                 print(f"\nLast {len(messages)} message(s):")
                 for msg in messages:
-                    direction = "➡️ You" if msg.out else "⬅️ Them"
+                    direction = "->  You" if msg.out else "<-  Them"
                     msg_text = (
                         msg.message[:100] if msg.message else "[Media/Sticker/File]"
                     )
@@ -601,9 +601,9 @@ async def interactive_delete_users(users):
                     )
                     print(f"  {direction} ({msg_date}): {msg_text}")
             else:
-                print("\n📭 No messages in this chat")
+                print("\n[EMPTY] No messages in this chat")
         except Exception as e:
-            print(f"\n⚠️  Could not fetch messages: {e}")
+            print(f"\n[WARN]  Could not fetch messages: {e}")
 
         # Ask for action
         choice = input("\nAction? (y=delete, n=skip, q=quit): ").lower().strip()
@@ -614,10 +614,10 @@ async def interactive_delete_users(users):
         elif choice == "y":
             try:
                 await client.delete_dialog(user)
-                print(f"✓ Deleted chat with '{full_name}'")
+                print(f"[OK] Deleted chat with '{full_name}'")
                 deleted_count += 1
             except Exception as e:
-                print(f"✗ Error deleting: {e}")
+                print(f"[FAIL] Error deleting: {e}")
         else:
             print(f"- Skipped '{full_name}'")
             skipped.append(full_name)
@@ -753,7 +753,7 @@ async def main():
                     user_analysis = await analyze_user_chats(all_users)
                 scam_users = user_analysis["scam"] + user_analysis["fake"]
                 deleted, skipped = await interactive_delete_users(scam_users)
-            print(f"\n✓ Deleted: {deleted}, Skipped: {len(skipped)}")
+            print(f"\n[OK] Deleted: {deleted}, Skipped: {len(skipped)}")
 
         elif menu_choice == "14":
             print("\nRefreshing...")

@@ -11,32 +11,32 @@ from pathlib import Path
 
 def print_banner():
     print("""
-╔════════════════════════════════════════════════════════════════════════╗
-║               TELEGRAM CHAT MANAGER - BUILD SYSTEM                     ║
-║                      Package Builder v1.0                              ║
-╚════════════════════════════════════════════════════════════════════════╝
+========================================================================
+               TELEGRAM CHAT MANAGER - BUILD SYSTEM
+                      Package Builder v1.0
+========================================================================
     """)
 
 
 def check_dependencies():
     """Check if required tools are installed"""
-    print("📦 Checking dependencies...")
+    print("[PACKAGE] Checking dependencies...")
 
     try:
         import telethon
         import flask
 
-        print("✅ Python dependencies OK")
+        print("[OK] Python dependencies OK")
     except ImportError:
-        print("❌ Missing Python dependencies")
+        print("[ERROR] Missing Python dependencies")
         print("   Run: pip install -r requirements.txt")
         return False
 
     try:
         subprocess.run(["pyinstaller", "--version"], capture_output=True, check=True)
-        print("✅ PyInstaller OK")
+        print("[OK] PyInstaller OK")
     except (subprocess.CalledProcessError, FileNotFoundError):
-        print("❌ PyInstaller not found")
+        print("[ERROR] PyInstaller not found")
         print("   Run: pip install pyinstaller")
         return False
 
@@ -45,7 +45,7 @@ def check_dependencies():
 
 def clean_build_dirs():
     """Clean build and dist directories"""
-    print("🧹 Cleaning build directories...")
+    print("[CLEAN] Cleaning build directories...")
     dirs_to_clean = ["build", "dist", "__pycache__", ".pytest_cache"]
 
     for dir_name in dirs_to_clean:
@@ -62,7 +62,9 @@ def clean_build_dirs():
 
 def create_executable(mode="web", onefile=True, windowed=False):
     """Create executable using PyInstaller"""
-    print(f"🔨 Building executable (mode: {mode}, onefile: {onefile}, windowed: {windowed})...")
+    print(
+        f"[BUILD] Building executable (mode: {mode}, onefile: {onefile}, windowed: {windowed})..."
+    )
 
     if mode == "cli":
         script = "src/cli_manager.py"
@@ -81,7 +83,7 @@ def create_executable(mode="web", onefile=True, windowed=False):
         cmd.append("--onefile")
     else:
         cmd.append("--onedir")
-    
+
     # Windowed mode (no console) - for GUI apps
     if windowed and mode == "web":
         cmd.append("--windowed")
@@ -162,10 +164,10 @@ def create_executable(mode="web", onefile=True, windowed=False):
 
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
-        print("✅ Build successful")
+        print("[OK] Build successful")
         return True
     except subprocess.CalledProcessError as e:
-        print(f"❌ Build failed: {e}")
+        print(f"[ERROR] Build failed: {e}")
         print(f"   stdout: {e.stdout}")
         print(f"   stderr: {e.stderr}")
         return False
@@ -173,7 +175,7 @@ def create_executable(mode="web", onefile=True, windowed=False):
 
 def create_distribution_package():
     """Create a distribution package with all necessary files"""
-    print("📦 Creating distribution package...")
+    print("[PACKAGE] Creating distribution package...")
 
     dist_dir = Path("dist")
     package_dir = dist_dir / "TelegramChatManager-Package"
@@ -213,12 +215,12 @@ def create_distribution_package():
         )
         os.chmod(start_script, 0o755)
 
-    print(f"✅ Package created at: {package_dir}")
+    print(f"[OK] Package created at: {package_dir}")
 
     # Create ZIP archive
     zip_name = f"TelegramChatManager-{sys.platform}"
     shutil.make_archive(str(dist_dir / zip_name), "zip", package_dir)
-    print(f"✅ ZIP archive created: {zip_name}.zip")
+    print(f"[OK] ZIP archive created: {zip_name}.zip")
 
 
 def main():
@@ -271,17 +273,17 @@ def main():
 
     # Build executable
     if create_executable(mode=args.mode, onefile=onefile, windowed=args.gui):
-        print("\n✨ Build completed successfully!")
-        print(f"📍 Executable location: dist/")
+        print("\n[DONE] Build completed successfully!")
+        print(f"[PATH] Executable location: dist/")
 
         # Create package if requested
         if args.package:
             create_distribution_package()
 
-        print("\n🚀 Ready to distribute!")
+        print("\n[READY] Ready to distribute!")
         print("   Share the file(s) in the dist/ folder")
     else:
-        print("\n❌ Build failed!")
+        print("\n[ERROR] Build failed!")
         sys.exit(1)
 
 

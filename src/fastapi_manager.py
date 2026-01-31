@@ -949,7 +949,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <body>
     <div class="container">
         <header class="header full" id="header">
-            <div class="logo">⚡</div>
+            <div class="logo">[START]</div>
             <div class="header-content">
                 <h1>Telegram Chat Manager</h1>
                 <p>Clean up your Telegram — safely and privately</p>
@@ -1103,7 +1103,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
             <div class="selection-bar" id="selection-bar">
                 <span class="selection-count"><span id="selected-count">0</span> selected</span>
-                <button onclick="deleteSelected()" class="danger small">🗑️ Delete Selected</button>
+                <button onclick="deleteSelected()" class="danger small">[DELETE] Delete Selected</button>
                 <button onclick="clearSelection()" class="ghost small">✕ Clear</button>
             </div>
 
@@ -1125,7 +1125,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             
             <!-- Offline Banner -->
             <div id="offline-banner" class="hidden" style="background: var(--warning-bg); color: var(--warning); padding: 10px 16px; border-radius: var(--radius-md); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                <span>⚠️</span> You are offline. Some features may not work.
+                <span>[WARN]</span> You are offline. Some features may not work.
             </div>
             
             <div id="chats" class="chat-list">
@@ -1529,7 +1529,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 const data = await response.json();
 
                 if (data.error) {
-                    chatsDiv.innerHTML = `<div class="empty-state"><div class="icon">⚠️</div><p style="color: var(--danger);">${data.error}</p></div>`;
+                    chatsDiv.innerHTML = `<div class="empty-state"><div class="icon">[WARN]</div><p style="color: var(--danger);">${data.error}</p></div>`;
                     return;
                 }
 
@@ -1537,7 +1537,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 updateStats(data.stats);
                 setFilter('all', document.getElementById('btn-all'));
             } catch (e) {
-                chatsDiv.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p style="color: var(--danger);">Network error. Please try again.</p></div>';
+                chatsDiv.innerHTML = '<div class="empty-state"><div class="icon">[WARN]</div><p style="color: var(--danger);">Network error. Please try again.</p></div>';
             }
         }
 
@@ -1790,27 +1790,27 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 const data = await response.json();
 
                 if (data.error) {
-                    contentDiv.innerHTML = `<div class="empty-state"><div class="icon">⚠️</div><p style="color: var(--danger);">${data.error}</p></div>`;
+                    contentDiv.innerHTML = `<div class="empty-state"><div class="icon">[WARN]</div><p style="color: var(--danger);">${data.error}</p></div>`;
                     return;
                 }
 
                 const counts = data.counts;
                 contentDiv.innerHTML = `
                     <div class="stats">
-                        <div class="stat-card"><h3>🗑️ Deleted Accounts</h3><p style="color: var(--danger);">${counts.deleted}</p></div>
+                        <div class="stat-card"><h3>[DELETE] Deleted Accounts</h3><p style="color: var(--danger);">${counts.deleted}</p></div>
                         <div class="stat-card"><h3>💬 No Messages</h3><p style="color: var(--warning);">${counts.no_messages}</p></div>
                         <div class="stat-card"><h3>🤖 Bots</h3><p style="color: var(--info);">${counts.bots}</p></div>
-                        <div class="stat-card"><h3>⚠️ Scam</h3><p style="color: var(--danger);">${counts.scam}</p></div>
+                        <div class="stat-card"><h3>[WARN] Scam</h3><p style="color: var(--danger);">${counts.scam}</p></div>
                         <div class="stat-card"><h3>🚫 Fake</h3><p style="color: var(--danger);">${counts.fake}</p></div>
-                        <div class="stat-card"><h3>✅ Active</h3><p style="color: var(--success);">${counts.active}</p></div>
+                        <div class="stat-card"><h3>[OK] Active</h3><p style="color: var(--success);">${counts.active}</p></div>
                     </div>
                     <div style="margin-top: 16px;">
                         <p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 12px;">Click to view category:</p>
                         <div class="actions">
-                            <button onclick="showAnalysisCategory('deleted')" class="secondary small">🗑️ Deleted Accounts (${counts.deleted})</button>
+                            <button onclick="showAnalysisCategory('deleted')" class="secondary small">[DELETE] Deleted Accounts (${counts.deleted})</button>
                             <button onclick="showAnalysisCategory('no_messages')" class="secondary small">💬 No Messages (${counts.no_messages})</button>
                             <button onclick="showAnalysisCategory('bots')" class="secondary small">🤖 Bots (${counts.bots})</button>
-                            <button onclick="showAnalysisCategory('scam')" class="danger small">⚠️ Scam (${counts.scam})</button>
+                            <button onclick="showAnalysisCategory('scam')" class="danger small">[WARN] Scam (${counts.scam})</button>
                             <button onclick="showAnalysisCategory('fake')" class="danger small">🚫 Fake (${counts.fake})</button>
                         </div>
                     </div>
@@ -1819,7 +1819,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
                 window.analysisData = data.users;
             } catch (e) {
-                contentDiv.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p style="color: var(--danger);">Network error</p></div>';
+                contentDiv.innerHTML = '<div class="empty-state"><div class="icon">[WARN]</div><p style="color: var(--danger);">Network error</p></div>';
             }
         }
 

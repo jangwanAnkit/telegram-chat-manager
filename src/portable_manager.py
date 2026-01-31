@@ -800,7 +800,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     </ul>
                     
                     <div style="background: #fef3c7; padding: 20px; border-radius: 10px; margin-top: 25px;">
-                        <strong style="color: #92400e;">⚠️ Important Security Note:</strong>
+                        <strong style="color: #92400e;">[WARN] Important Security Note:</strong>
                         <p style="margin-top: 10px; color: #92400e;">
                             This app creates a session file to stay logged in. Keep this file secure and don't share it with anyone.
                             It's saved in the same folder as this application.
@@ -958,10 +958,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     showStatus('connect-status', '✓ Setup complete! Click "Connect to Telegram" to continue.', 'success');
                 } else {
                     const data = await response.json();
-                    showStatus('setup-status', '❌ ' + (data.error || 'Error saving configuration'), 'error');
+                    showStatus('setup-status', '[ERROR] ' + (data.error || 'Error saving configuration'), 'error');
                 }
             } catch (e) {
-                showStatus('setup-status', '❌ Network error. Please try again.', 'error');
+                showStatus('setup-status', '[ERROR] Network error. Please try again.', 'error');
             }
         }
 
@@ -974,7 +974,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 const data = await response.json();
 
                 if (data.error) {
-                    showStatus('connect-status', '❌ ' + data.error, 'error');
+                    showStatus('connect-status', '[ERROR] ' + data.error, 'error');
                     document.getElementById('connect-btn').disabled = false;
                     document.getElementById('connect-btn').textContent = '📡 Connect to Telegram';
                 } else if (data.needs_code) {
@@ -985,7 +985,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     showMain();
                 }
             } catch (e) {
-                showStatus('connect-status', '❌ Connection error. Please try again.', 'error');
+                showStatus('connect-status', '[ERROR] Connection error. Please try again.', 'error');
                 document.getElementById('connect-btn').disabled = false;
                 document.getElementById('connect-btn').textContent = '📡 Connect to Telegram';
             }
@@ -1014,10 +1014,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 } else if (data.status === 'connected') {
                     showMain();
                 } else if (data.error) {
-                    showStatus('connect-status', '❌ ' + data.error, 'error');
+                    showStatus('connect-status', '[ERROR] ' + data.error, 'error');
                 }
             } catch (e) {
-                showStatus('connect-status', '❌ Verification error', 'error');
+                showStatus('connect-status', '[ERROR] Verification error', 'error');
             }
         }
 
@@ -1039,10 +1039,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 if (data.status === 'connected') {
                     showMain();
                 } else if (data.error) {
-                    showStatus('connect-status', '❌ ' + data.error, 'error');
+                    showStatus('connect-status', '[ERROR] ' + data.error, 'error');
                 }
             } catch (e) {
-                showStatus('connect-status', '❌ Verification error', 'error');
+                showStatus('connect-status', '[ERROR] Verification error', 'error');
             }
         }
 
@@ -1063,7 +1063,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 const data = await response.json();
 
                 if (data.error) {
-                    chatsDiv.innerHTML = `<div class="empty-state"><p style="color: #dc2626;">❌ Error: ${data.error}</p></div>`;
+                    chatsDiv.innerHTML = `<div class="empty-state"><p style="color: #dc2626;">[ERROR] Error: ${data.error}</p></div>`;
                     return;
                 }
 
@@ -1071,7 +1071,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 updateStats(data.stats);
                 showAll();
             } catch (e) {
-                chatsDiv.innerHTML = `<div class="empty-state"><p style="color: #dc2626;">❌ Network error. Please try again.</p></div>`;
+                chatsDiv.innerHTML = `<div class="empty-state"><p style="color: #dc2626;">[ERROR] Network error. Please try again.</p></div>`;
             }
         }
 
@@ -1167,7 +1167,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }
 
         async function deleteChat(id, title) {
-            if (!confirm(`⚠️ Are you sure you want to delete "${title}"?\\n\\nThis action cannot be undone!`)) return;
+            if (!confirm(`[WARN] Are you sure you want to delete "${title}"?\\n\\nThis action cannot be undone!`)) return;
             
             try {
                 const response = await fetch(`/api/delete/${id}`, { method: 'POST' });
@@ -1184,10 +1184,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     updateStats(data.stats);
                 } else {
                     const data = await response.json();
-                    alert('❌ Error: ' + data.error);
+                    alert('[ERROR] Error: ' + data.error);
                 }
             } catch (e) {
-                alert('❌ Network error. Please try again.');
+                alert('[ERROR] Network error. Please try again.');
             }
         }
 
@@ -1203,7 +1203,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 const data = await response.json();
 
                 if (data.error) {
-                    contentDiv.innerHTML = `<div class="empty-state"><p style="color: #dc2626;">❌ Error: ${data.error}</p></div>`;
+                    contentDiv.innerHTML = `<div class="empty-state"><p style="color: #dc2626;">[ERROR] Error: ${data.error}</p></div>`;
                     return;
                 }
 
@@ -1237,18 +1237,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     </div>
                     <h4 style="margin-top: 30px; margin-bottom: 15px;">Select a category to view users:</h4>
                     <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                        <button onclick="showAnalysisCategory('deleted')" class="danger small">🗑️ Deleted (${counts.deleted})</button>
+                        <button onclick="showAnalysisCategory('deleted')" class="danger small">[DELETE] Deleted (${counts.deleted})</button>
                         <button onclick="showAnalysisCategory('no_messages')" class="secondary small">📭 No Messages (${counts.no_messages})</button>
                         <button onclick="showAnalysisCategory('bots')" class="secondary small">🤖 Bots (${counts.bots})</button>
                         <button onclick="showAnalysisCategory('scam')" class="danger small">🚫 Scam (${counts.scam})</button>
-                        <button onclick="showAnalysisCategory('fake')" class="danger small">⚠️ Fake (${counts.fake})</button>
+                        <button onclick="showAnalysisCategory('fake')" class="danger small">[WARN] Fake (${counts.fake})</button>
                     </div>
                     <div id="analysis-users-list" class="chat-list" style="margin-top: 20px;"></div>
                 `;
 
                 window.analysisData = data.users;
             } catch (e) {
-                contentDiv.innerHTML = `<div class="empty-state"><p style="color: #dc2626;">❌ Network error</p></div>`;
+                contentDiv.innerHTML = `<div class="empty-state"><p style="color: #dc2626;">[ERROR] Network error</p></div>`;
             }
         }
 
@@ -1664,9 +1664,9 @@ def print_banner():
     print("╚" + "═" * 78 + "╝")
     print()
     print("✨ Your browser will open in a few seconds...")
-    print("📍 If it doesn't open automatically, visit: http://127.0.0.1:5000")
+    print("[PATH] If it doesn't open automatically, visit: http://127.0.0.1:5000")
     print()
-    print("⚠️  To stop the application, press Ctrl+C or close this window")
+    print("[WARN]  To stop the application, press Ctrl+C or close this window")
     print()
     print("─" * 80)
     print()
@@ -1695,7 +1695,7 @@ def main():
             client.disconnect()
         sys.exit(0)
     except Exception as e:
-        print(f"\n❌ Error: {e}")
+        print(f"\n[ERROR] Error: {e}")
         input("\nPress Enter to exit...")
 
 
