@@ -16,6 +16,7 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         include:
@@ -52,6 +53,8 @@ jobs:
 
       - name: Build executable
         run: python build.py --mode web --onefile --clean
+        env:
+          PYTHONIOENCODING: utf-8
 
       - name: Rename artifact (Linux/macOS)
         if: runner.os != 'Windows'
